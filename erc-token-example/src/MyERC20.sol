@@ -63,4 +63,24 @@ contract MyERC20 {
         balanceOf[to] += value;
         emit Transfer(address(0), to, value);
     }
+
+    function mint(uint256 value) external returns (bool) {
+        _mint(msg.sender, value);
+        return true;
+    }
+
+    function burn(uint256 value) external returns (bool) {
+        _burn(msg.sender, value);
+        return true;
+    }
+
+    function _burn(address from, uint256 value) internal {
+        uint256 fromBalance = balanceOf[from];
+        require(fromBalance >= value, "ERC20: burn amount exceeds balance");
+        unchecked {
+            balanceOf[from] = fromBalance - value;
+        }
+        totalSupply -= value;
+        emit Transfer(from, address(0), value);
+    }
 } 
